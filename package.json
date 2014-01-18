@@ -1,0 +1,24 @@
+{
+  "name": "bookr-aws",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/makepanic/bookr-aws.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/makepanic/bookr-aws/issues"
+  },
+  "homepage": "https://github.com/makepanic/bookr-aws",
+  "dependencies": {
+    "aws-sdk": "~2.0.0-rc8",
+    "rsvp": "~3.0.3",
+    "optimist": "~0.6.0"
+  }
+}
