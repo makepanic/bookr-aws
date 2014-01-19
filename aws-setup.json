@@ -1,0 +1,9 @@
+{
+    "opsworks": {
+        "api": {
+            "custom-security-group": "sg-00000",
+            "service-role-arn": "arn:aws:iam::123:role/foo",
+            "default-instance-profile-arn": "arn:aws:iam::123:instance-profile/foo"
+        }
+    }
+}
