@@ -1,15 +1,39 @@
-# commandline handling
-optimist = require('optimist')
-  .usage('Bootstraps AWS environment for bookr components.')
-  .describe('db', 'prepare and launch the database server')
-  .describe('api', 'prepare and launch the api server. This option requires the opsworks-api config')
-  .describe('web', 'prepare and launch the webclient server. This option requires the opsworks-web config')
-  .describe('ops-api', 'setup config for the api on opsworks')
-  .describe('ops-web', 'setup config for the webclient on opsworks')
-  .describe('deploy-api', 'deploys webclient application on opsworks')
-  .describe('deploy-web', 'deploys api application on opsworks')
-  .describe('all', 'prepare, setup and launch all the things')
+header = "\n
+        _/                            _/                                        _/  _/\n
+       _/_/_/      _/_/      _/_/    _/  _/    _/  _/_/                _/_/_/  _/     \n
+      _/    _/  _/    _/  _/    _/  _/_/      _/_/      _/_/_/_/_/  _/        _/  _/  \n
+     _/    _/  _/    _/  _/    _/  _/  _/    _/                    _/        _/  _/   \n
+    _/_/_/      _/_/      _/_/    _/    _/  _/                      _/_/_/  _/  _/    \n\n
 
+    Bootstraps AWS environment for bookr components. Version 1.0
+"
+
+
+# required modules in correct order
+modules = [
+  ['create-db-sec',  'sec/create-db-secgroup',  'creates the database security group']
+  ['create-web-sec', 'sec/create-web-secgroup', 'creates the web security group']
+  ['add-api-db-sec', 'sec/add-api-db-secgroup', 'adds the api ip to database security group']
+  ['launch-db',      'db/db-launch-instance',   'launches database instance']
+  ['ops-api',        'api/api-setup-opsworks',  'adds opsworks configuration for api']
+  ['launch-api',     'api/api-launch-instance', 'launches api instance']
+  ['deploy-api',     'api/api-deploy-app',      'deployes api application to api instance']
+  ['ops-web',        'web/web-setup-opsworks',  'adds opsworks configuration for webclient']
+  ['launch-web',     'web/web-launch-instance', 'launches web instance']
+]
+
+# load required npm modules
+nconf = require 'nconf'
+RSVP = require 'rsvp'
+AWS = require 'aws-sdk'
+optimist = require('optimist').usage(header);
+
+# add optimist descriptions
+modules.forEach((module) =>
+  optimist.describe(module[0], module[2])
+)
+
+# get cmdling values
 argv = optimist.argv;
 promises = []
 
@@ -18,62 +42,23 @@ if argv.help
   console.log optimist.help()
   return
 
-nconf = require 'nconf'
-RSVP = require 'rsvp'
-
 # load config file
 nconf.file {
   file: './aws-setup.json'
 }
 
 # aws sdk setup
-AWS = require 'aws-sdk'
 AWS.config.loadFromPath './aws-credentials.json'
 
-# load modules
-dbLaunchInstance = require './lib/db/db-launch-instance'
-apiSetupOpsworks = require './lib/api/api-setup-opsworks'
-apiLaunchInstance = require './lib/api/api-launch-instance'
-apiDeployApp = require './lib/api/api-deploy-app'
-webSetupOpsworks = require './lib/web/web-setup-opsworks'
-webLaunchInstance = require './lib/web/web-launch-instance'
-
-dbLaunchInstance.config { AWS: AWS, nconf: nconf }
-apiSetupOpsworks.config {AWS: AWS, nconf: nconf }
-apiLaunchInstance.config { AWS: AWS, nconf: nconf }
-webSetupOpsworks.config {AWS: AWS, nconf: nconf }
-webLaunchInstance.config { AWS: AWS, nconf: nconf }
-
-# set flags
-if argv.hasOwnProperty('all')
-  setupDb = setupApi = setupWeb = opsworksApi = opsworksWeb = deployApi = true
-else
-  setupDb = argv.hasOwnProperty 'db'
-  setupApi = argv.hasOwnProperty 'api'
-  setupWeb = argv.hasOwnProperty 'web'
-  opsworksApi = argv.hasOwnProperty 'ops-api'
-  opsworksWeb = argv.hasOwnProperty 'ops-web'
-  deployApi = argv.hasOwnProperty 'deploy-api'
-
-
-if setupDb
-  promises.push dbLaunchInstance.run
-
-if opsworksApi
-  promises.push apiSetupOpsworks.run
-
-if setupApi
-  promises.push apiLaunchInstance.run
-
-if deployApi
-  promises.push apiDeployApp.run
-
-if opsworksWeb
-  # after awsApi because we can use the api ip in chef
-  promises.push webSetupOpsworks.run
-
-if setupWeb
-  promises.push webLaunchInstance.run
+# load modules if cmdline has cmdKey
+modules.forEach((mod) ->
+  if argv.hasOwnProperty('all') or argv.hasOwnProperty mod[0]
+    module = require "./lib/#{mod[1]}"
+    # config module
+    module.config { AWS: AWS, nconf: nconf }
+    # push run promise
+    promises.push module.run
+)
 
 # run each promise after eachother
 if promises.length

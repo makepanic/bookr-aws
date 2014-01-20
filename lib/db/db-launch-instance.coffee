@@ -2,6 +2,8 @@ RSVP = require 'rsvp'
 AWS = null
 nconf = null
 
+exports.cmdKey = 'launch-db'
+
 findAmi = (ec2) =>
   new RSVP.Promise (resolve, reject) =>
     ec2.describeImages({
@@ -23,7 +25,8 @@ findAmi = (ec2) =>
       resolve data
     );
 
-runMongoAmi = (ec2, imageId) =>
+runMongoAmi = (opts) =>
+  {ec2, imageId, secGroup} = opts
   new RSVP.Promise (resolve, reject) =>
     console.log "starting mongo ami id: #{imageId}"
     ec2.runInstances({
@@ -31,7 +34,7 @@ runMongoAmi = (ec2, imageId) =>
       MinCount: 1,
       MaxCount: 1,
       KeyName: 'rndm',
-      SecurityGroupIds: ['sg-f4aae983']
+      SecurityGroupIds: [secGroup]
       InstanceType: 't1.micro'
       BlockDeviceMappings: [{
         DeviceName: '/dev/sdb'
@@ -67,7 +70,7 @@ runMongoAmi = (ec2, imageId) =>
                 clearInterval(intervalId)
                 reject result
               else
-                console.warn "instance isnt running, waiting #{intervalWait}sec"
+                console.warn "instance isnt running (is #{err}), waiting #{intervalWait}sec"
             );
           , intervalWait * 1000)
 
@@ -91,7 +94,7 @@ waitTillInstanceIsRunning = (ec2, instanceId) =>
             console.log "instance #{instanceId} is running"
             resolve launchingInstance.PublicIpAddress
           else
-            reject ''
+            reject launchingInstance.State.Name
         else
           # amount of found instances is wrong
           reject ({
@@ -110,7 +113,11 @@ exports.run = () =>
 
   new RSVP.Promise (resolve, reject) =>
     findAmi(ec2).then (data) =>
-      runMongoAmi(ec2, data.Images[0].ImageId).then (mongoPublicIp) =>
+      runMongoAmi({
+        ec2: ec2,
+        imageId: data.Images[0].ImageId,
+        secGroup: nconf.get('secGroup:db')
+      }).then (mongoPublicIp) =>
         console.log "bookr db server available at #{mongoPublicIp}"
         nconf.set('opsworks:customChef:bookr:server', mongoPublicIp + ':10102')
         nconf.save((err) =>

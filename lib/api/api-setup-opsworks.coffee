@@ -45,7 +45,7 @@ createLayer = (opsworks, stackId) =>
           NodejsVersion: '0.10.11'
         }
         Shortname: 'nodejs-layer'
-        CustomSecurityGroupIds: [nconf.get('opsworks:api:custom-security-group')]
+        CustomSecurityGroupIds: [nconf.get('secGroup:web')]
         EnableAutoHealing: true
         CustomRecipes: {
           Deploy: ['bookr::configure']

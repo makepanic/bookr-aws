@@ -23,7 +23,7 @@ waitTillInstanceIsRunning = (opsworks, instanceId) =>
               resolve launchingInstance.PublicIp
             else
               console.log "instance #{instanceId} status is #{launchingInstance.Status}"
-              reject ''
+              reject launchingInstance.Status
           else
             # amount of found instances is wrong
             reject ({
@@ -54,7 +54,7 @@ startInstance = (opsworks, instanceId) =>
               clearInterval(intervalId)
               reject result
             else
-              console.warn "instance isnt running, waiting #{intervalWait}sec"
+              console.warn "instance isnt running (is #{err}), waiting #{intervalWait}sec"
           );
         , intervalWait * 1000)
     )

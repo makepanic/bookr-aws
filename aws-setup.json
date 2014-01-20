@@ -1,31 +1,37 @@
 {
-    "opsworks": {
-        "api": {
-            "stackId": "123",
-            "layerId": "123",
-            "instanceId": "123",
-            "appId": "",
-            "latestDeploymentId": "",
-            "custom-security-group": "123",
-            "service-role-arn": "arn:aws:iam::123:role/123",
-            "default-instance-profile-arn": "arn:aws:iam::123:instance-profile/123"
-        },
-        "web": {
-            "stackId": "123",
-            "layerId": "123",
-            "instanceId": "123",
-            "appId": "",
-            "latestDeploymentId": "",
-            "custom-security-group": "123",
-            "service-role-arn": "arn:aws:iam::123:role/123",
-            "default-instance-profile-arn": "arn:aws:iam::123:instance-profile/123"
-        },
-        "customChef": {
-            "bookr": {
-                "api": "123",
-                "server": "123",
-                "isbndb": "123"
-            }
-        }
+  "secGroup": {
+    "db": "sg1",
+    "web": "sg2"
+  },
+  "opsworks": {
+    "api": {
+      "stackId": "123",
+      "layerId": "123",
+      "instanceId": "123",
+      "instanceIp": "123",
+      "appId": "123",
+      "latestDeploymentId": "123",
+      "custom-security-group": "123",
+      "service-role-arn": "arn:aws:iam::123:role/123",
+      "default-instance-profile-arn": "123"
+    },
+    "web": {
+      "stackId": "123",
+      "layerId": "123",
+      "instanceId": "123",
+      "instanceIp": "123",
+      "appId": "",
+      "latestDeploymentId": "",
+      "custom-security-group": "123",
+      "service-role-arn": "arn:aws:iam::123:role/123",
+      "default-instance-profile-arn": "arn:aws:iam::123:instance-profile/123"
+    },
+    "customChef": {
+      "bookr": {
+        "api": "123",
+        "server": "123",
+        "isbndb": "123"
+      }
     }
+  }
 }

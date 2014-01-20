@@ -6,10 +6,11 @@ exports.config = (opts) =>
   {AWS, nconf} = opts
 
 
-waitTillInstanceIsRunning = (opsworks, instanceId) =>
+waitTillInstanceIsRunning = (opts) =>
+  {opsworks, stackId, appId, deploymentId} = opts
   new RSVP.Promise (resolve, reject) =>
-    opsworks.describeInstances({
-        InstanceIds: [instanceId]
+    opsworks.describeDeployments({
+        DeploymentIds: [deploymentId]
       }, (err, data) =>
         if err
           reject err
@@ -23,7 +24,7 @@ waitTillInstanceIsRunning = (opsworks, instanceId) =>
               resolve launchingInstance.PublicIp
             else
               console.log "instance #{instanceId} status is #{launchingInstance.Status}"
-              reject ''
+              reject launchingInstance.Status
           else
             # amount of found instances is wrong
             reject ({
@@ -49,21 +50,27 @@ deployApp = (opts) =>
         reject err
       else
         console.log 'startInstance', data
-        intervalWait = 60
+        deploymentId = data.DeploymentId
+        intervalWait = 20
 
         # check every intervalWait secs if instance is running
         intervalId = setInterval(()=>
-          waitTillInstanceIsRunning(opsworks, instanceId).then((result) =>
+          waitTillInstanceIsRunning({
+            opsworks: opsworks
+            stackId: stackId
+            appId: appId
+            deploymentId: deploymentId
+          }).then(() =>
             # instance ready
             clearInterval(intervalId)
-            resolve result
+            resolve deploymentId
           ).catch((err)=>
             if err.notEqualOne
               console.warn 'launched more/less than 1 instance, aborting'
               clearInterval(intervalId)
               reject result
             else
-              console.warn "instance isnt running, waiting #{intervalWait}sec"
+              console.warn "instance isnt running (is #{err}), waiting #{intervalWait}sec"
           );
         , intervalWait * 1000)
     )

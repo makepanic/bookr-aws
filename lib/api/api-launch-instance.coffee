@@ -22,8 +22,7 @@ waitTillInstanceIsRunning = (opsworks, instanceId) =>
               console.log "instance #{instanceId} is online"
               resolve launchingInstance.PublicIp
             else
-              console.log "instance #{instanceId} status is #{launchingInstance.Status}"
-              reject ''
+              reject launchingInstance.Status
           else
             # amount of found instances is wrong
             reject ({
@@ -54,10 +53,13 @@ startInstance = (opsworks, instanceId) =>
               clearInterval(intervalId)
               reject result
             else
-              console.warn "instance isnt running, waiting #{intervalWait}sec"
+              console.warn "instance (#{instanceId}) isn't running (is #{err}), waiting #{intervalWait}sec"
           );
         , intervalWait * 1000)
     )
+
+whitelistInstanceIp = (instanceIp) =>
+
 
 exports.run = () =>
   opsworks = new AWS.OpsWorks({
@@ -68,6 +70,7 @@ exports.run = () =>
     startInstance(opsworks, nconf.get('opsworks:api:instanceId')).then((apiPublicIp)=>
       console.log "bookr api server available at http://#{apiPublicIp}/"
       nconf.set('opsworks:customChef:bookr:api', "http://#{apiPublicIp}/")
+      nconf.set('opsworks:api:instanceIp', apiPublicIp)
       nconf.save((err) =>
         if err
           reject err
