@@ -1,5 +1,6 @@
 RSVP = require 'rsvp'
 AWS = null
+nconf = null
 
 findAmi = (ec2) =>
   new RSVP.Promise (resolve, reject) =>
@@ -49,15 +50,57 @@ runMongoAmi = (ec2, imageId) =>
     }, (err, data) =>
       if err
         reject err
+      else
+        console.log 'runInstances', data
+        if data.Instances.length == 1
+          launchedInstance = data.Instances[0]
 
-      console.log 'run mongo ami result', data
+          # check every 5 secs if instance is running
+          intervalId = setInterval(()=>
+            waitTillInstanceIsRunning(ec2, launchedInstance.InstanceId).then((result) =>
+              # instance ready
+              clearInterval(intervalId)
+              resolve result
+            ).catch((err)=>
+              if err.notEqualOne
+                clearInterval(intervalId)
+                reject result
+              # instance not ready
+            )
+          , 5000)
 
-      resolve data
+        else
+          reject "it should've launched 1 instance but launched #{data.Instances.length}"
+    )
+
+waitTillInstanceIsRunning = (ec2, instanceId) =>
+  new RSVP.Promise (resolve, reject) =>
+    ec2.describeInstances({
+      InstanceIds: [instanceId]
+    }, (err, data) =>
+      if err
+        reject err
+      else
+        # check if state is on 'online'
+        reservations = data.Reservations
+        if reservations && reservations.length == 1 && reservations[0].Instances.length == 1
+          launchingInstance = reservations[0].Instances[0]
+          console.log 'launchingInstance', launchingInstance
+          if launchingInstance.State.Name == 'running'
+            resolve data
+          else
+            reject ''
+        else
+          # amount of found instances is wrong
+          reject ({
+            notEqualOne: true
+          })
     )
 
 
+
 exports.config = (opts) =>
-  {AWS} = opts
+  {AWS, nconf} = opts
 
 
 exports.run = () =>
