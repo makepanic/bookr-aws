@@ -20,13 +20,14 @@ modules = [
   ['deploy-api',     'api/api-deploy-app',      'deployes api application to api instance']
   ['ops-web',        'web/web-setup-opsworks',  'adds opsworks configuration for webclient']
   ['launch-web',     'web/web-launch-instance', 'launches web instance']
+  ['deploy-web',     'web/api-deploy-web',      'deployes web application to web instance']
 ]
 
 # load required npm modules
 nconf = require 'nconf'
 RSVP = require 'rsvp'
 AWS = require 'aws-sdk'
-optimist = require('optimist').usage(header);
+optimist = require('optimist').usage(header).describe('all', 'run all tasks');
 
 # add optimist descriptions
 modules.forEach((module) =>
@@ -68,4 +69,4 @@ if promises.length
     if index == promises.length - 1
       # append catch after last then
       chain.catch (err) =>
-        console.log "caugth error #{index}", err
+        console.warn "caugth error #{index}", err

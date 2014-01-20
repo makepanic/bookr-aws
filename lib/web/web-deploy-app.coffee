@@ -39,7 +39,7 @@ deployApp = (opts) =>
       StackId: stackId
       AppId: appId
       InstanceIds: instanceIds
-      Comment: 'deploy api application'
+      Comment: 'deploy web application'
       CustomJson: customChef
       Command: {
         Name: 'deploy'
@@ -81,12 +81,12 @@ exports.run = () =>
   new RSVP.Promise (resolve, reject) =>
     deployApp({
       opsworks: opsworks,
-      stackId: nconf.get('opsworks:api:stackId'),
-      instanceIds: [nconf.get('opsworks:api:instanceId')],
-      appId: nconf.get('opsworks:api:appId')
+      stackId: nconf.get('opsworks:web:stackId'),
+      instanceIds: [nconf.get('opsworks:web:instanceId')],
+      appId: nconf.get('opsworks:web:appId')
       customChef: JSON.stringify nconf.get('opsworks:customChef')
     }).then((deploymentId)=>
-      nconf.set('opsworks:api:latestDeploymentId', deploymentId)
+      nconf.set('opsworks:web:latestDeploymentId', deploymentId)
       nconf.save((err) =>
         if err
           reject err
