@@ -74,5 +74,6 @@ if promises.length
   promises.forEach (promise, index) =>
     chain = if chain then chain.then(promise) else promise()
     if index == promises.length - 1
+      # append catch after last then
       chain.catch (err) =>
         console.log "caugth error #{index}", err

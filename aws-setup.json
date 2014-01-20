@@ -1,16 +1,22 @@
 {
-  "opsworks": {
-    "api": {
-            "custom-security-group": "sg-00000",
-      "service-role-arn": "arn:aws:iam::123:role/foo",
-      "default-instance-profile-arn": "arn:aws:iam::123:instance-profile/foo"
-    },
-    "customChef": {
-      "bookr": {
-        "api": "YOUR-API-ADDRESS",
-        "server": "YOUR-DB-ADDRESS",
-        "isbndb": "ISBNDB-KEY"
-      }
+    "opsworks": {
+        "api": {
+            "layerId": "123",
+            "instanceId": "123",
+            "custom-security-group": "123",
+            "service-role-arn": "arn:aws:iam::123:role/foo",
+            "default-instance-profile-arn": "arn:aws:iam::123:instance-profile/foo"
+        },
+        "web": {
+            "layerId": "",
+            "instanceId": "123"
+        },
+        "customChef": {
+            "bookr": {
+                "api": "http://123/",
+                "server": "123",
+                "isbndb": "123"
+            }
+        }
     }
-  }
 }

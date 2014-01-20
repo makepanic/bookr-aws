@@ -83,6 +83,10 @@ layerAndInstanceSetup = (opsworks, stackId) =>
     console.log 'layerId', layerResult
     createInstance(opsworks, stackId, layerId).then((instanceResult) =>
       console.log 'instanceId', instanceResult
+      {
+        layerId: layerResult.LayerId
+        instanceId: instanceResult.InstanceId
+      }
     )
   )
 
@@ -123,7 +127,16 @@ exports.run = () =>
       ]
 
       RSVP.all(parallel).then((result) =>
-        resolve result
+        # update config
+        layerInstanceData = result[0];
+        nconf.set('opsworks:api:instanceId', layerInstanceData.instanceId)
+        nconf.set('opsworks:api:layerId', layerInstanceData.layerId)
+        nconf.save((err)=>
+          if err
+            reject err
+          else
+            resolve result
+        )
       )
     ).catch((err) =>
       reject err
