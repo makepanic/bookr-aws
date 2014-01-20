@@ -20,7 +20,7 @@ modules = [
   ['deploy-api',     'api/api-deploy-app',      'deployes api application to api instance']
   ['ops-web',        'web/web-setup-opsworks',  'adds opsworks configuration for webclient']
   ['launch-web',     'web/web-launch-instance', 'launches web instance']
-  ['deploy-web',     'web/api-deploy-web',      'deployes web application to web instance']
+  ['deploy-web',     'web/web-deploy-app',      'deployes web application to web instance']
 ]
 
 # load required npm modules

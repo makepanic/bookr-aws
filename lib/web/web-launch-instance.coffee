@@ -22,7 +22,6 @@ waitTillInstanceIsRunning = (opsworks, instanceId) =>
               console.log "instance #{instanceId} is online"
               resolve launchingInstance.PublicIp
             else
-              console.log "instance #{instanceId} status is #{launchingInstance.Status}"
               reject launchingInstance.Status
           else
             # amount of found instances is wrong
