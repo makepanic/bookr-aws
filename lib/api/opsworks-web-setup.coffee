@@ -8,7 +8,7 @@ exports.config = (opts) =>
 createStack = (opsworks) =>
   new RSVP.Promise (resolve, reject) =>
     opsworks.createStack({
-      Name: 'bookr-api-' + Date.now()
+      Name: 'bookr-web-' + Date.now()
       Region: 'eu-west-1'
       HostnameTheme: 'Wild_Cats'
       DefaultOs: 'Amazon Linux'
@@ -48,7 +48,7 @@ createLayer = (opsworks, stackId) =>
         CustomSecurityGroupIds: [nconf.get('opsworks:api:custom-security-group')]
         EnableAutoHealing: true
         CustomRecipes: {
-          Deploy: ['bookr::configure']
+          Deploy: ['bookr::configure-web-client', 'bookr::grunt']
         }
     }, (err, data) =>
       if err
@@ -64,7 +64,7 @@ createInstance = (opsworks, stackId, layerId) =>
       StackId: stackId
       LayerIds: [layerId]
       InstanceType: 't1.micro'
-      Hostname: 'bookr-api'
+      Hostname: 'bookr-web'
       Os: 'Amazon Linux'
       SshKeyName: 'rndm'
       Architecture: 'x86_64'
@@ -90,13 +90,13 @@ appSetup = (opsworks, stackId) =>
   new RSVP.Promise (resolve, reject) =>
     opsworks.createApp({
       StackId: stackId
-      Shortname: 'bookr-api-app'
-      Name: 'Bookr API application'
-      Description: 'Bookr api nodejs application'
+      Shortname: 'bookr-web-app'
+      Name: 'Bookr Webclient application'
+      Description: 'Bookr webclient nodejs application'
       Type: 'nodejs'
       AppSource: {
         Type: 'git'
-        Url: 'https://github.com/makepanic/bookr.git'
+        Url: 'https://github.com/makepanic/bookr-web.git'
         Revision: 'master'
       }
     }, (err, data) =>

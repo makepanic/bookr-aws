@@ -1,7 +1,0 @@
-{
-    "bookr": {
-        "api": "YOUR-API-ADDRESS",
-        "server": "YOUR-SERVER-ADDRESS",
-        "isbndb": "YOUR-ISBN-KEY"
-    }
-}

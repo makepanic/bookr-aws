@@ -53,6 +53,7 @@ runMongoAmi = (ec2, imageId) =>
       else
         if data.Instances.length == 1
           launchedInstance = data.Instances[0]
+          intervalWait = 8
 
           # check every 5 secs if instance is running
           intervalId = setInterval(()=>
@@ -66,9 +67,9 @@ runMongoAmi = (ec2, imageId) =>
                 clearInterval(intervalId)
                 reject result
               else
-                console.warn 'instance isnt running, waiting 10sec'
+                console.warn "instance isnt running, waiting #{intervalWait}sec"
             );
-          , 10000)
+          , intervalWait * 1000)
 
         else
           reject "it should've launched 1 instance but launched #{data.Instances.length}"
@@ -108,8 +109,13 @@ exports.run = () =>
   ec2 = new AWS.EC2()
 
   new RSVP.Promise (resolve, reject) =>
-    console.log 'bookr-mongo called'
     findAmi(ec2).then (data) =>
       runMongoAmi(ec2, data.Images[0].ImageId).then (mongoPublicIp) =>
         console.log "bookr db server available at #{mongoPublicIp}"
-        resolve data
+        nconf.set('opsworks:customChef:bookr:server', mongoPublicIp + ':10102')
+        nconf.save((err) =>
+          if err
+            reject err
+          else
+            resolve mongoPublicIp
+        )
