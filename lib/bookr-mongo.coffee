@@ -51,7 +51,6 @@ runMongoAmi = (ec2, imageId) =>
       if err
         reject err
       else
-        console.log 'runInstances', data
         if data.Instances.length == 1
           launchedInstance = data.Instances[0]
 
@@ -63,11 +62,13 @@ runMongoAmi = (ec2, imageId) =>
               resolve result
             ).catch((err)=>
               if err.notEqualOne
+                console.warn 'launched more/less than 1 instance, aborting'
                 clearInterval(intervalId)
                 reject result
-              # instance not ready
-            )
-          , 5000)
+              else
+                console.warn 'instance isnt running, waiting 10sec'
+            );
+          , 10000)
 
         else
           reject "it should've launched 1 instance but launched #{data.Instances.length}"
@@ -85,9 +86,9 @@ waitTillInstanceIsRunning = (ec2, instanceId) =>
         reservations = data.Reservations
         if reservations && reservations.length == 1 && reservations[0].Instances.length == 1
           launchingInstance = reservations[0].Instances[0]
-          console.log 'launchingInstance', launchingInstance
           if launchingInstance.State.Name == 'running'
-            resolve data
+            console.log "instance #{instanceId} is running"
+            resolve launchingInstance.PublicIpAddress
           else
             reject ''
         else
@@ -108,7 +109,7 @@ exports.run = () =>
 
   new RSVP.Promise (resolve, reject) =>
     console.log 'bookr-mongo called'
-    resolve 'done'
     findAmi(ec2).then (data) =>
-      runMongoAmi(ec2, data.Images[0].ImageId).then (data) =>
+      runMongoAmi(ec2, data.Images[0].ImageId).then (mongoPublicIp) =>
+        console.log "bookr db server available at #{mongoPublicIp}"
         resolve data
