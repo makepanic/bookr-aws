@@ -108,7 +108,7 @@ appSetup = (opsworks, stackId) =>
         console.log 'rejecting promise'
         reject err
       else
-        resolve data
+        resolve data.AppId
     )
 
 
@@ -129,6 +129,9 @@ exports.run = () =>
       RSVP.all(parallel).then((result) =>
         # update config
         layerInstanceData = result[0];
+        appId = result[1];
+        nconf.set('opsworks:api:appId', appId)
+        nconf.set('opsworks:api:stackId', stackId)
         nconf.set('opsworks:api:instanceId', layerInstanceData.instanceId)
         nconf.set('opsworks:api:layerId', layerInstanceData.layerId)
         nconf.save((err)=>

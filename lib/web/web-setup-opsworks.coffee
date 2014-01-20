@@ -13,8 +13,8 @@ createStack = (opsworks) =>
       HostnameTheme: 'Wild_Cats'
       DefaultOs: 'Amazon Linux'
       UseCustomCookbooks: true
-      ServiceRoleArn: nconf.get('opsworks:api:service-role-arn')
-      DefaultInstanceProfileArn: nconf.get('opsworks:api:default-instance-profile-arn')
+      ServiceRoleArn: nconf.get('opsworks:web:service-role-arn')
+      DefaultInstanceProfileArn: nconf.get('opsworks:web:default-instance-profile-arn')
       CustomCookbooksSource: {
         Type: 'git'
         Url: 'https://github.com/makepanic/opsworks-cookbooks'
@@ -45,7 +45,7 @@ createLayer = (opsworks, stackId) =>
           NodejsVersion: '0.10.11'
         }
         Shortname: 'nodejs-layer'
-        CustomSecurityGroupIds: [nconf.get('opsworks:api:custom-security-group')]
+        CustomSecurityGroupIds: [nconf.get('opsworks:web:custom-security-group')]
         EnableAutoHealing: true
         CustomRecipes: {
           Deploy: ['bookr::configure-web-client', 'bookr::grunt']
@@ -83,6 +83,10 @@ layerAndInstanceSetup = (opsworks, stackId) =>
     console.log 'layerId', layerResult
     createInstance(opsworks, stackId, layerId).then((instanceResult) =>
       console.log 'instanceId', instanceResult
+      {
+        layerId: layerResult.LayerId
+        instanceId: instanceResult.InstanceId
+      }
     )
   )
 
@@ -104,7 +108,7 @@ appSetup = (opsworks, stackId) =>
         console.log 'rejecting promise'
         reject err
       else
-        resolve data
+        resolve data.AppId
     )
 
 
@@ -123,7 +127,19 @@ exports.run = () =>
       ]
 
       RSVP.all(parallel).then((result) =>
-        resolve result
+        # update config
+        layerInstanceData = result[0];
+        appId = result[1];
+        nconf.set('opsworks:web:appId', appId)
+        nconf.set('opsworks:web:stackId', stackId)
+        nconf.set('opsworks:web:instanceId', layerInstanceData.instanceId)
+        nconf.set('opsworks:web:layerId', layerInstanceData.layerId)
+        nconf.save((err)=>
+          if err
+            reject err
+          else
+            resolve result
+        )
       )
     ).catch((err) =>
       reject err

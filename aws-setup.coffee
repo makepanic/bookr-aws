@@ -6,6 +6,8 @@ optimist = require('optimist')
   .describe('web', 'prepare and launch the webclient server. This option requires the opsworks-web config')
   .describe('ops-api', 'setup config for the api on opsworks')
   .describe('ops-web', 'setup config for the webclient on opsworks')
+  .describe('deploy-api', 'deploys webclient application on opsworks')
+  .describe('deploy-web', 'deploys api application on opsworks')
   .describe('all', 'prepare, setup and launch all the things')
 
 argv = optimist.argv;
@@ -28,45 +30,50 @@ nconf.file {
 AWS = require 'aws-sdk'
 AWS.config.loadFromPath './aws-credentials.json'
 
-# bookr components setups
-awsMongo = require './lib/bookr-mongo'
-awsApi = require './lib/bookr-api'
-awsWeb = require './lib/bookr-web'
-opsWorksApi = require './lib/api/opsworks-api-setup'
-opsWorksWeb = require './lib/api/opsworks-web-setup'
+# load modules
+dbLaunchInstance = require './lib/db/db-launch-instance'
+apiSetupOpsworks = require './lib/api/api-setup-opsworks'
+apiLaunchInstance = require './lib/api/api-launch-instance'
+apiDeployApp = require './lib/api/api-deploy-app'
+webSetupOpsworks = require './lib/web/web-setup-opsworks'
+webLaunchInstance = require './lib/web/web-launch-instance'
 
-awsMongo.config { AWS: AWS, nconf: nconf }
-awsApi.config { AWS: AWS, nconf: nconf }
-awsWeb.config { AWS: AWS, nconf: nconf }
-opsWorksApi.config {AWS: AWS, nconf: nconf }
-opsWorksWeb.config {AWS: AWS, nconf: nconf }
+dbLaunchInstance.config { AWS: AWS, nconf: nconf }
+apiSetupOpsworks.config {AWS: AWS, nconf: nconf }
+apiLaunchInstance.config { AWS: AWS, nconf: nconf }
+webSetupOpsworks.config {AWS: AWS, nconf: nconf }
+webLaunchInstance.config { AWS: AWS, nconf: nconf }
 
 # set flags
 if argv.hasOwnProperty('all')
-  setupDb = setupApi = setupWeb = opsworksApi = opsworksWeb = true
+  setupDb = setupApi = setupWeb = opsworksApi = opsworksWeb = deployApi = true
 else
   setupDb = argv.hasOwnProperty 'db'
   setupApi = argv.hasOwnProperty 'api'
   setupWeb = argv.hasOwnProperty 'web'
   opsworksApi = argv.hasOwnProperty 'ops-api'
   opsworksWeb = argv.hasOwnProperty 'ops-web'
+  deployApi = argv.hasOwnProperty 'deploy-api'
 
 
 if setupDb
-  promises.push awsMongo.run
+  promises.push dbLaunchInstance.run
 
 if opsworksApi
-  promises.push opsWorksApi.run
+  promises.push apiSetupOpsworks.run
 
 if setupApi
-  promises.push awsApi.run
+  promises.push apiLaunchInstance.run
+
+if deployApi
+  promises.push apiDeployApp.run
 
 if opsworksWeb
   # after awsApi because we can use the api ip in chef
-  promises.push opsWorksWeb.run
+  promises.push webSetupOpsworks.run
 
 if setupWeb
-  promises.push awsWeb.run
+  promises.push webLaunchInstance.run
 
 # run each promise after eachother
 if promises.length

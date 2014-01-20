@@ -1,19 +1,28 @@
 {
     "opsworks": {
         "api": {
+            "stackId": "123",
             "layerId": "123",
             "instanceId": "123",
+            "appId": "",
+            "latestDeploymentId": "",
             "custom-security-group": "123",
-            "service-role-arn": "arn:aws:iam::123:role/foo",
-            "default-instance-profile-arn": "arn:aws:iam::123:instance-profile/foo"
+            "service-role-arn": "arn:aws:iam::123:role/123",
+            "default-instance-profile-arn": "arn:aws:iam::123:instance-profile/123"
         },
         "web": {
-            "layerId": "",
-            "instanceId": "123"
+            "stackId": "123",
+            "layerId": "123",
+            "instanceId": "123",
+            "appId": "",
+            "latestDeploymentId": "",
+            "custom-security-group": "123",
+            "service-role-arn": "arn:aws:iam::123:role/123",
+            "default-instance-profile-arn": "arn:aws:iam::123:instance-profile/123"
         },
         "customChef": {
             "bookr": {
-                "api": "http://123/",
+                "api": "123",
                 "server": "123",
                 "isbndb": "123"
             }

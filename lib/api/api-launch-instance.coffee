@@ -40,9 +40,9 @@ startInstance = (opsworks, instanceId) =>
         reject err
       else
         console.log 'startInstance', data
-        intervalWait = 30
+        intervalWait = 60
 
-        # check every 5 secs if instance is running
+        # check every intervalWait secs if instance is running
         intervalId = setInterval(()=>
           waitTillInstanceIsRunning(opsworks, instanceId).then((result) =>
             # instance ready
@@ -67,7 +67,7 @@ exports.run = () =>
   new RSVP.Promise (resolve, reject) =>
     startInstance(opsworks, nconf.get('opsworks:api:instanceId')).then((apiPublicIp)=>
       console.log "bookr api server available at http://#{apiPublicIp}/"
-      nconf.set('opsworks:customChef:bookr:api', 'http://' + apiPublicIp + '/')
+      nconf.set('opsworks:customChef:bookr:api', "http://#{apiPublicIp}/")
       nconf.save((err) =>
         if err
           reject err
