@@ -13,10 +13,10 @@ header = "\n
 modules = [
   ['create-db-sec',  'sec/create-db-secgroup',  'creates the database security group']
   ['create-web-sec', 'sec/create-web-secgroup', 'creates the web security group']
-  ['add-api-db-sec', 'sec/add-api-db-secgroup', 'adds the api ip to database security group']
   ['launch-db',      'db/db-launch-instance',   'launches database instance']
   ['ops-api',        'api/api-setup-opsworks',  'adds opsworks configuration for api']
   ['launch-api',     'api/api-launch-instance', 'launches api instance']
+  ['add-api-db-sec', 'sec/add-api-db-secgroup', 'adds the api ip to database security group']
   ['deploy-api',     'api/api-deploy-app',      'deployes api application to api instance']
   ['ops-web',        'web/web-setup-opsworks',  'adds opsworks configuration for webclient']
   ['launch-web',     'web/web-launch-instance', 'launches web instance']
