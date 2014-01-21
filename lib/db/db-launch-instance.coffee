@@ -26,7 +26,7 @@ findAmi = (ec2) =>
     );
 
 runMongoAmi = (opts) =>
-  {ec2, imageId, secGroup} = opts
+  {ec2, size, imageId, secGroup} = opts
   new RSVP.Promise (resolve, reject) =>
     console.log "starting mongo ami id: #{imageId}"
     ec2.runInstances({
@@ -35,7 +35,7 @@ runMongoAmi = (opts) =>
       MaxCount: 1,
       KeyName: 'rndm',
       SecurityGroupIds: [secGroup]
-      InstanceType: 't1.micro'
+      InstanceType: size
       BlockDeviceMappings: [{
         DeviceName: '/dev/sdb'
         Ebs: {
@@ -114,6 +114,7 @@ exports.run = () =>
   new RSVP.Promise (resolve, reject) =>
     findAmi(ec2).then (data) =>
       runMongoAmi({
+        size: nconf.get('size:db')
         ec2: ec2,
         imageId: data.Images[0].ImageId,
         secGroup: nconf.get('secGroup:db')

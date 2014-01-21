@@ -58,12 +58,13 @@ createLayer = (opsworks, stackId) =>
         resolve data
     )
 
-createInstance = (opsworks, stackId, layerId) =>
+createInstance = (opts) =>
+  {opsworks, stackId, layerId, size} = opts
   new RSVP.Promise (resolve, reject) =>
     opsworks.createInstance({
       StackId: stackId
       LayerIds: [layerId]
-      InstanceType: 't1.micro'
+      InstanceType: size
       Hostname: 'bookr-web'
       Os: 'Amazon Linux'
       SshKeyName: 'rndm'
@@ -81,7 +82,12 @@ layerAndInstanceSetup = (opsworks, stackId) =>
   createLayer(opsworks, stackId).then((layerResult) =>
     layerId = layerResult.LayerId
     console.log 'layerId', layerResult
-    createInstance(opsworks, stackId, layerId).then((instanceResult) =>
+    createInstance({
+      opsworks: opsworks
+      stackId: stackId
+      layerId: layerId
+      size: nconf.get('size:web')
+    }).then((instanceResult) =>
       console.log 'instanceId', instanceResult
       {
         layerId: layerResult.LayerId

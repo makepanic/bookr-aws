@@ -1,36 +1,41 @@
 {
+  "size": {
+    "db": "t1.micro",
+    "api": "m1.small",
+    "web": "t1.micro"
+  },
   "secGroup": {
-    "db": "sg1",
-    "web": "sg2"
+    "db": "sg-00000000",
+    "web": "sg-00000000"
   },
   "opsworks": {
     "api": {
-      "stackId": "123",
-      "layerId": "123",
-      "instanceId": "123",
-      "instanceIp": "123",
-      "appId": "123",
-      "latestDeploymentId": "123",
-      "custom-security-group": "123",
-      "service-role-arn": "arn:aws:iam::123:role/123",
-      "default-instance-profile-arn": "123"
+      "stackId": "000000000000000000000000000000000000",
+      "layerId": "000000000000000000000000000000000000",
+      "instanceId": "000000000000000000000000000000000000",
+      "instanceIp": "0000000000000",
+      "appId": "000000000000000000000000000000000008",
+      "latestDeploymentId": "000000000000000000000000000000000000",
+      "custom-security-group": "00000000000",
+      "service-role-arn": "arn:aws:iam::000000000000:role/my-role",
+      "default-instance-profile-arn": "arn:aws:iam::000000000000:instance-profile/my-role"
     },
     "web": {
-      "stackId": "123",
-      "layerId": "123",
-      "instanceId": "123",
-      "instanceIp": "123",
-      "appId": "",
-      "latestDeploymentId": "",
-      "custom-security-group": "123",
-      "service-role-arn": "arn:aws:iam::123:role/123",
-      "default-instance-profile-arn": "arn:aws:iam::123:instance-profile/123"
+      "stackId": "000000000000000000000000000000000000",
+      "layerId": "000000000000000000000000000000000000",
+      "instanceId": "000000000000000000000000000000000000",
+      "instanceIp": "0000000000000",
+      "appId": "000000000000000000000000000000000008",
+      "latestDeploymentId": "000000000000000000000000000000000000",
+      "custom-security-group": "sg-00000000000",
+      "service-role-arn": "arn:aws:iam::000000000000:role/my-role",
+      "default-instance-profile-arn": "arn:aws:iam::000000000000:instance-profile/my-role"
     },
     "customChef": {
       "bookr": {
-        "api": "123",
-        "server": "123",
-        "isbndb": "123"
+        "api": "000000000000000000000",
+        "server": "00000000000000000000",
+        "isbndb": "00000000"
       }
     }
   }
