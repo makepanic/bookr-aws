@@ -1,5 +1,7 @@
 #bookr-aws
 
+##What
+
 bootstrapping to deploy all bookr components to aws
 ```
 
@@ -25,3 +27,12 @@ Options:
   --deploy-web      deployes web application to web instance  
   
 ```
+
+##Setup
+
+You need nodejs and npm. (tested with node v0.10.24 ).
+
+1. instlal dependencies via `npm install`
+2. run `grunt` to convert coffeescript files
+3. start `aws-setup`
+

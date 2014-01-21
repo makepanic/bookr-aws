@@ -22,5 +22,9 @@
     "optimist": "~0.6.0",
     "nconf": "~0.6.9",
     "log4js": "~0.6.9"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-coffee": "~0.8.2"
   }
 }
