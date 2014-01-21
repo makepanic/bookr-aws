@@ -30,9 +30,21 @@ Options:
 
 ##Setup
 
+###Local nodejs
+
 You need nodejs and npm. (tested with node v0.10.24 ).
 
-1. instlal dependencies via `npm install`
+1. install dependencies via `npm install`
 2. run `grunt` to convert coffeescript files
 3. start `aws-setup`
 
+###Vagrant
+
+If you don't want to use/install nodejs locally there is a Vagrantfile that uses [Vagrant](http://www.vagrantup.com/)
+to provide a virtual machine with everything that is required to run this app.
+
+1. run `vagrant up`
+2. if everything is done call `vagrant ssh`
+3. cd to `/vagrant`
+4. run `grunt`
+5. start `aws-setup`
