@@ -1,5 +1,6 @@
 {
   "size": {
+    "lb": "t1.micro",
     "db": "t1.micro",
     "api": "m1.small",
     "web": "t1.micro"
@@ -14,29 +15,34 @@
       "layerId": "000000000000000000000000000000000000",
       "instanceId": "000000000000000000000000000000000000",
       "instanceIp": "0000000000000",
-      "appId": "000000000000000000000000000000000008",
+      "appId": "000000000000000000000000000000000000",
       "latestDeploymentId": "000000000000000000000000000000000000",
-      "custom-security-group": "00000000000",
-      "service-role-arn": "arn:aws:iam::111111111111:role/my-role",
-      "default-instance-profile-arn": "arn:aws:iam::111111111111:instance-profile/my-role"
+      "custom-security-group": "sg-00000000",
+      "service-role-arn": "arn:aws:iam::111111111111:role/1111111111111111111111111",
+      "default-instance-profile-arn": "arn:aws:iam::111111111111:instance-profile/111111111111111111111"
     },
     "web": {
-      "stackId": "000000000000000000000000000000000000",
-      "layerId": "000000000000000000000000000000000000",
-      "instanceId": "000000000000000000000000000000000000",
-      "instanceIp": "0000000000000",
-      "appId": "000000000000000000000000000000000008",
-      "latestDeploymentId": "000000000000000000000000000000000000",
-      "custom-security-group": "sg-00000000000",
-      "service-role-arn": "arn:aws:iam::111111111111:role/my-role",
-      "default-instance-profile-arn": "arn:aws:iam::111111111111:instance-profile/my-role"
+        "stackId": "000000000000000000000000000000000000",
+        "layerId": "000000000000000000000000000000000000",
+        "instanceId": "000000000000000000000000000000000000",
+        "instanceIp": "0000000000000",
+        "appId": "000000000000000000000000000000000000",
+        "latestDeploymentId": "000000000000000000000000000000000000",
+        "custom-security-group": "sg-00000000",
+        "service-role-arn": "arn:aws:iam::111111111111:role/1111111111111111111111111",
+        "default-instance-profile-arn": "arn:aws:iam::111111111111:instance-profile/111111111111111111111"
     },
     "customChef": {
       "bookr": {
-        "api": "000000000000000000000",
-        "server": "00000000000000000000",
+        "api": "http://00000000000000/",
+        "server": "0000000000000000000",
         "isbndb": "11111111"
       }
+    },
+    "lb": {
+      "instanceId": "000000000000000000000000000000000000",
+      "layerId": "000000000000000000000000000000000000",
+      "instanceIp": "00000000000000"
     }
   }
 }

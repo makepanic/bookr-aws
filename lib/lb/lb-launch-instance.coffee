@@ -64,9 +64,10 @@ exports.run = () =>
   })
 
   new RSVP.Promise (resolve, reject) =>
-    startInstance(opsworks, nconf.get('opsworks:api:instanceId')).then((apiPublicIp)=>
-      console.log "bookr api server available at http://#{apiPublicIp}/"
-      nconf.set('opsworks:api:instanceIp', apiPublicIp)
+    startInstance(opsworks, nconf.get('opsworks:lb:instanceId')).then((apiPublicIp)=>
+      console.log "bookr HAProxy server available at http://#{apiPublicIp}/"
+      nconf.set('opsworks:customChef:bookr:api', "http://#{apiPublicIp}/")
+      nconf.set('opsworks:lb:instanceIp', apiPublicIp)
       nconf.save((err) =>
         if err
           reject err

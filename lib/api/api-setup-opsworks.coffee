@@ -55,46 +55,8 @@ createLayer = (opsworks, stackId) =>
         console.log 'rejecting promise'
         reject err
       else
-        resolve data
+        resolve data.LayerId
     )
-
-createInstance = (opts) =>
-  {opsworks, stackId, layerId, size} = opts
-  new RSVP.Promise (resolve, reject) =>
-    opsworks.createInstance({
-      StackId: stackId
-      LayerIds: [layerId]
-      InstanceType: size
-      Hostname: 'bookr-api'
-      Os: 'Amazon Linux'
-      SshKeyName: 'rndm'
-      Architecture: 'x86_64'
-      RootDeviceType: 'ebs'
-    }, (err, data) =>
-      if err
-        console.log 'rejecting promise'
-        reject err
-      else
-        resolve data
-    )
-
-layerAndInstanceSetup = (opsworks, stackId) =>
-  createLayer(opsworks, stackId).then((layerResult) =>
-    layerId = layerResult.LayerId
-    console.log 'layerId', layerResult
-    createInstance({
-      opsworks: opsworks
-      stackId: stackId
-      layerId: layerId
-      size: nconf.get('size:api')
-    }).then((instanceResult) =>
-      console.log 'instanceId', instanceResult
-      {
-        layerId: layerResult.LayerId
-        instanceId: instanceResult.InstanceId
-      }
-    )
-  )
 
 appSetup = (opsworks, stackId) =>
   new RSVP.Promise (resolve, reject) =>
@@ -128,18 +90,17 @@ exports.run = () =>
       stackId = stackResult.StackId
 
       parallel = [
-        layerAndInstanceSetup(opsworks, stackId),
+        createLayer(opsworks, stackId),
         appSetup(opsworks, stackId)
       ]
 
       RSVP.all(parallel).then((result) =>
         # update config
-        layerInstanceData = result[0];
+        layerId = result[0];
         appId = result[1];
         nconf.set('opsworks:api:appId', appId)
         nconf.set('opsworks:api:stackId', stackId)
-        nconf.set('opsworks:api:instanceId', layerInstanceData.instanceId)
-        nconf.set('opsworks:api:layerId', layerInstanceData.layerId)
+        nconf.set('opsworks:api:layerId', layerId)
         nconf.save((err)=>
           if err
             reject err

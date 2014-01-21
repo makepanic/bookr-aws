@@ -14,17 +14,20 @@ bootstrapping to deploy all bookr components to aws
     Bootstraps AWS environment for bookr components. Version 1.0
 
 Options:
-  --all             run all tasks                             
-  --create-db-sec   creates the database security group       
-  --create-web-sec  creates the web security group            
-  --add-api-db-sec  adds the api ip to database security group
-  --launch-db       launches database instance                
-  --ops-api         adds opsworks configuration for api       
-  --launch-api      launches api instance                     
-  --deploy-api      deployes api application to api instance  
-  --ops-web         adds opsworks configuration for webclient 
-  --launch-web      launches web instance                     
-  --deploy-web      deployes web application to web instance  
+  --all               run all tasks
+  --create-db-sec     creates the database security group
+  --create-web-sec    creates the web security group
+  --launch-db         launches database instance
+  --ops-api           adds opsworks configuration for api stack, layer
+  --ops-api-instance  adds opsworks configuration for api instance
+  --lb-api            adds opsworks HAProxy configuration for api
+  --launch-api        launches api instance
+  --launch-lb         launches loadbalancer instance
+  --add-api-db-sec    adds the api ip to database security group
+  --deploy-api        deployes api application to api instance
+  --ops-web           adds opsworks configuration for webclient
+  --launch-web        launches web instance
+  --deploy-web        deployes web application to web instance
   
 ```
 
@@ -66,3 +69,13 @@ to provide a virtual machine with everything that is required to run this app.
 3. cd to `/vagrant`
 4. run `grunt`
 5. start `aws-setup` (`node aws-setup.js --all`)
+
+##Architecture
+
+In the end this tool is just a collection of aws sdk wrappers bound to commandline flags.
+It stores the result in the `aws-setup.json` file. This allows some neat tricks (see __useful commands__).
+Each component reads data from the config file.
+
+##Useful commands
+
+- for scaling add a new api instance and register with everybody: `node aws-setup.js --ops-api-instance --launch-api --add-api-db-sec --deploy-api`

@@ -1,4 +1,5 @@
 RSVP = require 'rsvp'
+createInstance = require '../sdk/createInstance'
 AWS = null
 nconf = null
 
@@ -58,40 +59,21 @@ createLayer = (opsworks, stackId) =>
         resolve data
     )
 
-createInstance = (opts) =>
-  {opsworks, stackId, layerId, size} = opts
-  new RSVP.Promise (resolve, reject) =>
-    opsworks.createInstance({
-      StackId: stackId
-      LayerIds: [layerId]
-      InstanceType: size
-      Hostname: 'bookr-web'
-      Os: 'Amazon Linux'
-      SshKeyName: 'rndm'
-      Architecture: 'x86_64'
-      RootDeviceType: 'ebs'
-    }, (err, data) =>
-      if err
-        console.log 'rejecting promise'
-        reject err
-      else
-        resolve data
-    )
-
 layerAndInstanceSetup = (opsworks, stackId) =>
   createLayer(opsworks, stackId).then((layerResult) =>
     layerId = layerResult.LayerId
     console.log 'layerId', layerResult
     createInstance({
+      hostname: 'bookr-web'
       opsworks: opsworks
       stackId: stackId
       layerId: layerId
       size: nconf.get('size:web')
-    }).then((instanceResult) =>
-      console.log 'instanceId', instanceResult
+    }).then((instanceId) =>
+      console.log 'instanceId', instanceId
       {
         layerId: layerResult.LayerId
-        instanceId: instanceResult.InstanceId
+        instanceId: instanceId
       }
     )
   )
