@@ -54,7 +54,7 @@ You need nodejs, npm and grunt. (tested with node v0.10.24 ).
 
 1. install dependencies via `npm install`
 2. run `grunt` to convert coffeescript files
-3. start `aws-setup`
+3. start `aws-setup` ('node aws-setup.js --all')
 
 ###Vagrant
 
@@ -65,4 +65,4 @@ to provide a virtual machine with everything that is required to run this app.
 2. if everything is done call `vagrant ssh`
 3. cd to `/vagrant`
 4. run `grunt`
-5. start `aws-setup`
+5. start `aws-setup` ('node aws-setup.js --all')
