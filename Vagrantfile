@@ -14,4 +14,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
   config.vm.provision :shell, :path => "bootstrap.sh"
 
+  #if getting the NAT bug in virtualbox, there you don't get an ip and through this can't get a connection to the Inet
+  config.vm.provider "virtualbox" do |v|
+    v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  end
 end
