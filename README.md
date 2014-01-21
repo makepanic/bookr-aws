@@ -30,6 +30,8 @@ Options:
 
 ##Setup
 
+0. Add your aws credentials to `aws-credentials.json`
+
 ###Local nodejs
 
 You need nodejs and npm. (tested with node v0.10.24 ).
