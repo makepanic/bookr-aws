@@ -24,10 +24,20 @@ modules = [
 ]
 
 # load required npm modules
+log4js = require 'log4js'
 nconf = require 'nconf'
 RSVP = require 'rsvp'
 AWS = require 'aws-sdk'
 optimist = require('optimist').usage(header).describe('all', 'run all tasks');
+
+# log4js setup
+log4js.configure({
+  appenders: [
+    {type:'console'},
+    {type:'file', filename:'aws-setup.log'}
+  ]
+});
+log4js.replaceConsole();
 
 # add optimist descriptions
 modules.forEach((module) =>

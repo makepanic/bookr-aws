@@ -49,7 +49,7 @@ deployApp = (opts) =>
         reject err
       else
         deploymentId = data.DeploymentId
-        intervalWait = 20
+        intervalWait = 60
 
         # check every intervalWait secs if instance is running
         intervalId = setInterval(()=>
