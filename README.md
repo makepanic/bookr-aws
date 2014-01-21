@@ -34,7 +34,7 @@ Options:
 
 ###Local nodejs
 
-You need nodejs and npm. (tested with node v0.10.24 ).
+You need nodejs, npm and grunt. (tested with node v0.10.24 ).
 
 1. install dependencies via `npm install`
 2. run `grunt` to convert coffeescript files

@@ -12,3 +12,4 @@ apt-get -y install nodejs
 # create tmux session with teamocil webdev config
 cd /vagrant/
 npm install
+npm install -g grunt-cli
