@@ -2,25 +2,6 @@ RSVP = require 'rsvp'
 AWS = null
 nconf = null
 
-setSecurityParams = (opts) =>
-  {groupId, ec2} = opts
-  new RSVP.Promise (resolve, reject) =>
-    ec2.authorizeSecurityGroupIngress({
-      GroupId: groupId,
-      ec2: ec2
-      IpPermissions: [{
-        IpProtocol: 'tcp'
-        FromPort: 10102
-        ToPort: 10102
-      }]
-    }, (err, data) =>
-      if err
-        reject err
-      else
-        resolve ''
-    )
-
-
 createSecurityGroup = (ec2) =>
   new RSVP.Promise (resolve, reject) =>
     ec2.createSecurityGroup({
@@ -41,6 +22,7 @@ exports.run = () =>
 
   new RSVP.Promise (resolve, reject) =>
     createSecurityGroup(ec2).then (groupId) =>
+      console.log 'created db security group'
       nconf.set('secGroup:db', groupId)
       nconf.save((err) =>
         if err

@@ -54,6 +54,7 @@ AWS.config.loadFromPath './aws-credentials.json'
 # load modules if cmdline has cmdKey
 modules.forEach((mod) ->
   if argv.hasOwnProperty('all') or argv.hasOwnProperty mod[0]
+    console.log "adding module #{mod[0]}"
     module = require "./lib/#{mod[1]}"
     # config module
     module.config { AWS: AWS, nconf: nconf }

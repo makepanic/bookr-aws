@@ -6,16 +6,16 @@ authorizeWeb = (opts) =>
   {ec2, groupId} = opts
   new RSVP.Promise (resolve, reject) =>
     ec2.authorizeSecurityGroupIngress({
-        GroupId: groupId,
-        IpPermissions: [{
-          IpProtocol: 'tcp'
-          FromPort: 80
-          ToPort: 80
-          IpRanges: [{
-            CidrIp: '0.0.0.0/0'
-          }]
+      GroupId: groupId,
+      IpPermissions: [{
+        IpProtocol: 'tcp'
+        FromPort: 80
+        ToPort: 80
+        IpRanges: [{
+          CidrIp: '0.0.0.0/0'
         }]
-      }, (err, data) =>
+      }]
+    }, (err, data) =>
       if err
         reject err
       else
@@ -42,16 +42,17 @@ exports.run = () =>
 
   new RSVP.Promise (resolve, reject) =>
     createSecurityGroup(ec2).then (groupId) =>
+      console.log 'created web security group'
       nconf.set('secGroup:web', groupId)
       nconf.save((err) =>
         if err
           console.warn err
           reject err
         else
-          authorizeIp({
+          authorizeWeb({
             ec2: ec2,
-            groupId: nconf.get('secGroup:db')
-          }).then (groupId) =>
-            console.log 'authorized api ip on db secgroup'
+            groupId: groupId
+          }).then () =>
+            console.log 'authorized web ip/port on web secgroup'
             resolve groupId
       )
