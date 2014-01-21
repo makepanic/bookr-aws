@@ -30,7 +30,22 @@ Options:
 
 ##Setup
 
-0. Add your aws credentials to `aws-credentials.json`
+1. Add your aws credentials to `aws-credentials.json`
+2. Add your service-role-arn to `aws-setup.json` for api and web.
+    Example: `"service-role-arn": "arn:aws:iam::000000000000:role/opsworks-role"`
+3. Add your default-instance-profile-arn to `aws-setup.json` for api and web.
+    Example: `"default-instance-profile-arn": "arn:aws:iam::000000000000:instance-profile/opsworks-role"`
+4. Add your isbndb api-key to `aws-setup.json` in `opsworks.customChef.isbndb`
+    Example:
+```
+"customChef": {
+  "bookr": {
+    "api": "",
+    "server": "",
+    "isbndb": "12345678"
+  }
+}
+```
 
 ###Local nodejs
 
