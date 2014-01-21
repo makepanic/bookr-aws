@@ -17,8 +17,8 @@
       "appId": "000000000000000000000000000000000008",
       "latestDeploymentId": "000000000000000000000000000000000000",
       "custom-security-group": "00000000000",
-      "service-role-arn": "arn:aws:iam::000000000000:role/my-role",
-      "default-instance-profile-arn": "arn:aws:iam::000000000000:instance-profile/my-role"
+      "service-role-arn": "arn:aws:iam::111111111111:role/my-role",
+      "default-instance-profile-arn": "arn:aws:iam::111111111111:instance-profile/my-role"
     },
     "web": {
       "stackId": "000000000000000000000000000000000000",
@@ -28,14 +28,14 @@
       "appId": "000000000000000000000000000000000008",
       "latestDeploymentId": "000000000000000000000000000000000000",
       "custom-security-group": "sg-00000000000",
-      "service-role-arn": "arn:aws:iam::000000000000:role/my-role",
-      "default-instance-profile-arn": "arn:aws:iam::000000000000:instance-profile/my-role"
+      "service-role-arn": "arn:aws:iam::111111111111:role/my-role",
+      "default-instance-profile-arn": "arn:aws:iam::111111111111:instance-profile/my-role"
     },
     "customChef": {
       "bookr": {
         "api": "000000000000000000000",
         "server": "00000000000000000000",
-        "isbndb": "00000000"
+        "isbndb": "11111111"
       }
     }
   }

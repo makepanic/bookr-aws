@@ -30,6 +30,7 @@ Options:
 
 ##Setup
 
+0. Change instance size in `aws-setup.json` if you need to
 1. Add your aws credentials to `aws-credentials.json`
 2. Add your service-role-arn to `aws-setup.json` for api and web.
     Example: `"service-role-arn": "arn:aws:iam::000000000000:role/opsworks-role"`
