@@ -33,6 +33,13 @@ Options:
 
 ##Setup
 
+###AWS IAM/ARN settings
+
+- this app uses a service role that needs `Trusted Entities: The service opsworks.amazonaws.com`
+- this app uses an instance role that needs `Trusted Entities: The service ec2.amazonaws.com`
+
+###Tool related
+
 0. Change instance size in `aws-setup.json` if you need to
 1. Add your aws credentials to `aws-credentials.json`
 2. Add your service-role-arn to `aws-setup.json` for api and web.
