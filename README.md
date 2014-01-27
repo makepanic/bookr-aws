@@ -45,7 +45,7 @@ Here's a working IAM/ARN setup for instance role and service role:
 
 ![Opsworks service role arn](https://raw.github.com/makepanic/bookr-aws/master/pics/iam-aws-opsworks.png)
 
-__PSA: This tool should work with the following config but I can't promise it.
+__PSA: This tool should work with the shown config but I can't promise it.
 I don't have full access to the aws account that was given to me.
 Before using it try to check that your user has ec2 and opsworks permissions.__
 
