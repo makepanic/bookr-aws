@@ -33,6 +33,16 @@ Options:
 
 ##Setup
 
+###MongoDB AMI
+
+Part of the setup is starting a mongodb database server. You can use this guide to prepare mongodb and create an ami:
+
+- [http://media.amazonwebservices.com/AWS_NoSQL_MongoDB.pdf](http://media.amazonwebservices.com/AWS_NoSQL_MongoDB.pdf)
+- set mongod to be running on port 10102
+- use `/dev/sdb` as mongodb `dbpath`
+- create an instance snapshot
+- edit the `SnapshotId` in `lib/db/db-launch-instance.coffee` with your created mongodb ami id
+
 ###AWS IAM/ARN settings
 
 
